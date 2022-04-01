@@ -1,79 +1,101 @@
-function getHistory(){
-    return document.getElementById("history-value").innerText;
+// -----------------------1-----------------------//
+const numbers = document.querySelectorAll(".number")
+
+numbers.forEach((number) => {
+    number.addEventListener('click', (event) => {
+        // console.log(event.target.value)
+        inputNumber(event.target.value)
+        updateScreen(currentNumber)
+    })
+})
+// -----------------------2-----------------------//
+const calculatorScreen = document.querySelector(".calculator-screen")
+
+const updateScreen = (number) => {
+    calculatorScreen.value = number
 }
-function printHistory(num){
-    document.getElementById("history-value").innerText=num;
-}
-function getOutput(){
-    return document.getElementById("output-values").innerText;
-}
-function printOutput(num){
-    if(num==""){
-    document.getElementById("output-values").innerText=num;
+// -----------------------3-----------------------//
+let pervNumber = ''
+let calculationOperator = ''
+let currentNumber = '0'
+// -----------------------4-----------------------//
+const inputNumber = (number) => {
+    if (currentNumber === '0'){
+        currentNumber = number
+    }else {
+        currentNumber += number
     }
-    else{
-        document.getElementById("output-values").innerText=getFormattedNumber(num);
+}
+// -----------------------Operator-----------------------//
+const operators = document.querySelectorAll(".operator")
+
+operators.forEach((operator) => {
+    operator.addEventListener('click', (event) =>{
+        InputOperator(event.target.value)
+    })
+})
+// -----------------------Definition Input Operator-----------------------//
+const InputOperator = (operator) => {
+    if (calculationOperator === ''){
+        pervNumber = currentNumber
     }
+    calculationOperator = operator
+    currentNumber = '0'
 }
-function getFormattedNumber(num){
-    if(num=="-"){
-        return "";
+// -----------------------Calculate-----------------------//
+const equalSign = document.querySelector(".equal-sign")
+
+equalSign.addEventListener('click', (event) => {
+    calculate()
+    updateScreen(currentNumber)
+})
+// -----------------------Function Calculate-----------------------//
+const calculate = () => {
+    let = ''
+    switch (calculationOperator) {
+        case "+":
+            result = parseFloat(pervNumber) + parseFloat(currentNumber)
+            break;
+        case "-":
+            result = parseFloat(pervNumber) - parseFloat(currentNumber)
+            break;
+        case "*":
+            result = parseFloat(pervNumber) * parseFloat(currentNumber)
+            break;
+        case "/":
+            result = parseFloat(pervNumber) / parseFloat(currentNumber)
+            break;
+    
+        default:
+            break;
     }
-    var n=Number(num);
-    var value= n.toLocaleString("en");
-    return value;
+    currentNumber = result
+    calculationOperator = ''
 }
-function reverseNumberFormat(num){
-    return Number(num.replace(/,/g, ''));
+// -----------------------AC Button-----------------------//
+const clearBtn = document.querySelector(".all-clear")
+
+clearBtn.addEventListener('click', (event)=>{
+    clearAll()
+    updateScreen(currentNumber)
+})
+// -----------------------Definition AC Button-----------------------//
+const clearAll = () => {
+    pervNumber = ''
+    calculationOperator = ''
+    currentNumber = '0'
 }
-var operator = document.getElementsByClassName("operator");
-for( var i=0;i<operator.length;i++){
-    operator[i].addEventListener('click',function(){
-            if(this.id=="clear"){
-                printHistory("");
-                printOutput("");
-            }
-            else if(this.id=="backspace"){
-                var
-                output=reverseNumberFormat(getOutput()).toString();
-                if(output){//if output has a value
-                    output= output.substr(0,output.length-1);
-                printOutput(output);
-                }
-            }
-            else{
-                var output = getOutput();
-                var history = getHistory();
-                if(output==""&&history!=""){
-                    if(isNaN(history[history.length-1])){
-                        history=history.substr(0,history.length-1);
-                    }
-                }
-                if(output!="" || history!=""){
-                    output= output==""?
-                    output:reverseNumberFormat(output);
-                    history=history+output;
-                    if(this.id=="="){
-                        var result= eval(history);
-                        printOutput(result);
-                        printHistory("");
-                    }
-                    else{
-                        history=history+this.id;
-                        printHistory(history);
-                        printOutput("");
-                    }
-                }
-            }
-    });
-}
-var number = document.getElementsByClassName("number");
-for(var i=0;i<number.length;i++){
-    number[i].addEventListener('click',function(){
-        var output=reverseNumberFormat(getOutput());
-        if(output!=NaN){
-            output=output+this.id;
-            printOutput(output);
-        }
-    });
+// -----------------------Decimal-----------------------//
+const decimal = document.querySelector(".decimal")
+
+decimal.addEventListener('click', (event) => {
+    inputDecimal(event.target.value)
+    updateScreen(currentNumber)
+})
+// -----------------------Input Decimal-----------------------//
+inputDecimal = (dot) => {
+    if(currentNumber.includes('.')) {
+        return
+    }
+    currentNumber += dot
 }
